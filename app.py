@@ -33,7 +33,7 @@ def initialize_files():
     ensure_data_dir()
     if not os.path.exists(ADMIN_FILE):
         with open(ADMIN_FILE, 'w') as f:
-            json.dump({"password": "admin"}, f)
+            json.dump({"password": "admin1984zcpg"}, f)
     if not os.path.exists(USERS_FILE):
         with open(USERS_FILE, 'w') as f:
             json.dump({}, f)
