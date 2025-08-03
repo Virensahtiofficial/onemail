@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Login - OneMail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* No scrolling */
+      user-select: none;
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+      font-family: 'Inter', sans-serif;
+    }
+    .select-text { user-select: text; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeInUp { animation: fadeInUp 0.6s ease forwards; }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const usernameInput = document.querySelector('input[name="username"]');
+      if(usernameInput){
+        usernameInput.addEventListener('input', () => {
+          usernameInput.value = usernameInput.value.toLowerCase();
+        });
+      }
+    });
+  </script>
+</head>
+<body class="flex items-center justify-center min-h-screen px-4">
+
+  <div class="bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-2xl w-full max-w-md p-8 sm:p-10 animate-fadeInUp">
+    <h2 class="text-3xl font-extrabold mb-8 text-left text-gray-900 tracking-tight select-text">OneMail ID</h2>
+    <form method="POST" class="space-y-6" novalidate>
+      <input
+        type="text"
+        name="username"
+        placeholder="Your username"
+        required
+        autocomplete="off"
+        class="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-transparent transition text-gray-900"
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Your password"
+        required
+        class="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-transparent transition text-gray-900"
+      />
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-3 rounded-xl font-semibold shadow-lg transition"
+      >
+        Login
+      </button>
+    </form>
+    <p class="mt-6 text-left text-gray-700 select-text text-sm">
+      Don't have an account? 
+      <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline font-medium">Register here</a>
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="mt-6 space-y-2">
+      {% for category, msg in messages %}
+        <li class="text-left text-sm font-semibold select-text
+          {% if category == 'error' %}text-red-600{% else %}text-green-600{% endif %}">
+          {{ msg }}
+        </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+</body>
+</html>

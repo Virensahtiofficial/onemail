@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Send Mail - OneMail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .animate-fade-slide {
+      animation: fadeSlide 0.3s ease-out forwards;
+    }
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const recipientInput = document.querySelector('input[name="recipient"]');
+      recipientInput.addEventListener('input', () => {
+        recipientInput.value = recipientInput.value.toLowerCase();
+      });
+
+      // Init file list text
+      const fileList = document.getElementById('fileList');
+      if (fileList) {
+        fileList.textContent = 'No files selected';
+      }
+    });
+
+    function updateFileList() {
+      const input = document.getElementById('attachments');
+      const list = document.getElementById('fileList');
+      if (input.files.length === 0) {
+        list.textContent = 'No files selected';
+        return;
+      }
+      const names = Array.from(input.files).map(f => f.name);
+      list.textContent = names.join(', ');
+    }
+  </script>
+</head>
+<body class="bg-gray-100 select-none min-h-screen flex flex-col items-center justify-center px-4 py-10 font-sans">
+
+  <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 animate-fade-slide">
+    
+    <!-- Top Navigation -->
+    <div class="flex justify-between items-center mb-6 text-sm">
+      <a href="{{ url_for('inbox') }}" class="text-blue-600 hover:underline font-medium">← Back to Inbox</a>
+      <a href="{{ url_for('logout') }}" class="text-red-600 hover:underline font-medium">Logout</a>
+    </div>
+
+    <!-- Heading -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Compose Mail</h2>
+
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-5">
+      
+      <!-- Recipient -->
+      <div>
+        <label for="recipient" class="block text-sm font-medium text-gray-700 mb-1">Recipient Username:</label>
+        <input
+          type="text"
+          id="recipient"
+          name="recipient"
+          required
+          autocomplete="off"
+          placeholder="e.g. john123"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <!-- Message -->
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message:</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="6"
+          required
+          placeholder="Type your message here..."
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+        ></textarea>
+      </div>
+
+      <!-- Attachments -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Attachments (optional):</label>
+        <label
+          for="attachments"
+          class="cursor-pointer inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition select-none"
+          >Choose Files</label
+        >
+        <input
+          type="file"
+          id="attachments"
+          name="attachments"
+          multiple
+          class="hidden"
+          onchange="updateFileList()"
+        />
+        <div id="fileList" class="mt-2 text-gray-600 text-sm select-text"></div>
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-2">
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-medium py-2 rounded-lg shadow-sm"
+        >
+          Send Mail
+        </button>
+      </div>
+    </form>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="mt-5 space-y-2">
+      {% for category, msg in messages %}
+        <li class="text-center text-sm font-semibold
+          {% if category == 'error' %}text-red-600{% else %}text-green-600{% endif %}">
+          {{ msg }}
+        </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+  </div>
+
+</body>
+</html>

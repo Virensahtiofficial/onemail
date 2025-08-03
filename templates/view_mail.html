@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>View Mail - OneMail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-6 select-none min-h-screen flex flex-col items-center font-sans">
+
+  <div class="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8 mt-12">
+    <a href="{{ url_for('inbox') }}" 
+       class="text-blue-600 hover:underline mb-6 inline-block font-medium">
+      ← Back to Inbox
+    </a>
+
+    <h1 class="text-3xl font-semibold text-gray-900 mb-8">Mail Details</h1>
+
+    <section class="space-y-3 text-gray-800 text-sm md:text-base">
+      <p>
+        <span class="font-semibold">From:</span> {{ mail['from'] }}
+        {% if mail.verified %}
+          <img src="{{ url_for('static', filename='verified.png') }}" alt="Verified" class="inline-block align-text-bottom ml-1 h-4 w-4" />
+        {% endif %}
+        {% if mail['emoji'] %}
+          <img src="{{ url_for('static', filename='emojis/' + mail['emoji']) }}" alt="Emoji" class="inline-block align-text-bottom ml-1 h-4 w-4" />
+        {% endif %}
+      </p>
+      <p><span class="font-semibold">To:</span> {{ mail['to'] }}</p>
+      <p><span class="font-semibold">Sent:</span> {{ mail['timestamp'] }}</p>
+    </section>
+
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2">Message</h2>
+      <div
+        class="bg-gray-100 p-6 rounded-lg text-gray-700 text-base leading-relaxed text-left whitespace-pre-line max-w-full"
+      >
+        {{ mail['message']|replace('\\n', '<br>')|safe }}
+      </div>
+    </section>
+
+    {% if mail['attachments'] %}
+    <section class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2">Attachments</h2>
+      <ul class="list-disc list-inside text-blue-600 space-y-2">
+        {% for file in mail['attachments'] %}
+          <li>
+            <a href="{{ url_for('get_attachment', username=mail['from'], filename=file) }}" target="_blank" 
+               class="hover:underline font-medium">
+              {{ file }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Admin Login - OneMail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { user-select: none; }
+    .select-text { user-select: text; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeInUp { animation: fadeInUp 0.6s ease forwards; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-700 flex items-center justify-center select-none font-sans py-10">
+
+  <div class="bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-2xl max-w-sm w-full p-10 animate-fadeInUp">
+    <h1 class="text-4xl font-extrabold mb-10 text-center text-gray-900 tracking-tight select-text">Admin Login</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-6 space-y-3">
+        {% for category, message in messages %}
+          <p class="text-center text-sm font-semibold select-text
+            {% if category == 'error' %}text-red-600{% else %}text-green-600{% endif %}">
+            {{ message }}
+          </p>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin_login') }}" class="space-y-8" novalidate>
+      <input
+        type="password"
+        name="password"
+        placeholder="Admin password"
+        required
+        autofocus
+        class="w-full px-6 py-4 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500 focus:border-transparent transition"
+      />
+      <button
+        type="submit"
+        class="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white py-4 rounded-xl font-semibold shadow-lg transition"
+      >
+        Login
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>
